@@ -25,17 +25,24 @@ public class MiniomTarget : MonoBehaviour
         if (targetList.Count > 0 && !minionAIScript.hasTarget)
         {
 
-            foreach (GameObject target in targetList)
+            for (int i = targetList.Count-1; i > -1 ; i--)
             {
-                float closestDistance = Mathf.Infinity;
-                float distance = Vector3.Distance(target.transform.position, gameObject.transform.position);
-                if (distance < closestDistance)
+                if (targetList[i] != null)
                 {
-                    closestDistance = distance;
-                    closestTarget = target;
+                    float closestDistance = Mathf.Infinity;
+                    float distance = Vector3.Distance(targetList[i].transform.position, gameObject.transform.position);
+                    if (distance < closestDistance)
+                    {
+                        closestDistance = distance;
+                        closestTarget = targetList[i];
+                    }
+                }
+                else
+                {
+                    targetList.Remove(targetList[i]);
                 }
             }
-            minionAIScript.targetMinion = closestTarget;
+            minionAIScript.target = closestTarget;
             minionAIScript.hasTarget = true;
         }
     }
@@ -44,16 +51,22 @@ public class MiniomTarget : MonoBehaviour
     {
         if (isBlue)
         {
-            if (!targetList.Contains(other.gameObject) && other.gameObject.layer == 10)
+            if (!targetList.Contains(other.gameObject))
             {
-                targetList.Add(other.gameObject);
+                if (other.gameObject.layer == 10 || other.gameObject.layer == 12)
+                {
+                    targetList.Add(other.gameObject);
+                }
             }
         }
         else
         {
-            if (!targetList.Contains(other.gameObject) && other.gameObject.layer == 9)
+            if (!targetList.Contains(other.gameObject))
             {
-                targetList.Add(other.gameObject);
+                if (other.gameObject.layer == 9 || other.gameObject.layer == 11)
+                {
+                    targetList.Add(other.gameObject);
+                }
             }
         }
     }
@@ -63,6 +76,8 @@ public class MiniomTarget : MonoBehaviour
         if (targetList.Contains(other.gameObject))
         {
             targetList.Remove(other.gameObject);
+            minionAIScript.hasTarget = false;
+            minionAIScript.target = null;
         }
     }
 }

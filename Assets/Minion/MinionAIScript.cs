@@ -12,17 +12,21 @@ public class MinionAIScript : MonoBehaviour
 
     public Material blueMat;
     public Material redMat;
+    public Sprite redIcon;
+    public Sprite blueIcon;
 
     public bool isBlue = false;
 
-    public GameObject targetMinion;
+    public GameObject target;
     public bool hasTarget = false;
 
     public float health = 100f;
     public float attackDamage = 10f;
-    public float attackRange = 2f;
+    public float attackRange = 5f;
     public float attackSpeed = 0.5f;
     public float attackTimer = 2f;
+
+    public GameObject minimapSprite;
 
 
     // Start is called before the first frame update
@@ -32,11 +36,13 @@ public class MinionAIScript : MonoBehaviour
         {
             this.GetComponent<MeshRenderer>().material = blueMat;
             this.gameObject.layer = 9;
+            minimapSprite.GetComponent<SpriteRenderer>().sprite = blueIcon;
         }
         else
         {
             this.GetComponent<MeshRenderer>().material = redMat;
             this.gameObject.layer = 10;
+            minimapSprite.GetComponent<SpriteRenderer>().sprite = redIcon;
         }
         agent = this.GetComponent<NavMeshAgent>();
         agent.SetDestination(destination);
@@ -51,9 +57,10 @@ public class MinionAIScript : MonoBehaviour
             agent.SetDestination(finalDestination);
         }
 
-        if (hasTarget && targetMinion != null)
+        if (hasTarget && target != null)
         {
-            agent.SetDestination(targetMinion.transform.position);
+            agent.SetDestination(target.transform.position);
+            agent.stoppingDistance = attackRange;
             attackTimer -= Time.deltaTime;
             if (attackTimer <= 0)
             {
@@ -64,7 +71,7 @@ public class MinionAIScript : MonoBehaviour
         }
         
 
-        if (targetMinion == null)
+        if (target == null)
         {
             hasTarget = false;
             if (passedMid)
@@ -84,9 +91,16 @@ public class MinionAIScript : MonoBehaviour
 
     void Attack()
     {
-        if (Vector3.Distance(targetMinion.transform.position, gameObject.transform.position) < attackRange)
+        if (Vector3.Distance(target.transform.position, gameObject.transform.position) < attackRange)
         {
-            targetMinion.GetComponent<MinionAIScript>().health -= attackDamage;
+            if (target.TryGetComponent(out MinionAIScript minionTargetScript))
+            {
+                minionTargetScript.health -= attackDamage;
+            }
+            if (target.TryGetComponent(out PlayerScript playerTargetScript))
+            {
+                playerTargetScript.health -= attackDamage;
+            }
         }
     }
 }
