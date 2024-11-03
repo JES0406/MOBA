@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public GameObject blueMinionPrefab;
-    public GameObject redMinionPrefab;
+    public GameObject minionPrefab;
     Vector3 blueSpawnLocation = new Vector3(-45, 1, -45);
     Vector3 redSpawnLocation = new Vector3(45, 1, 45);
     Vector3 topLane = new Vector3(-45, 1, 45);
@@ -26,25 +25,31 @@ public class GameManager : MonoBehaviour
         {
             GameObject minionSpawned;
             // Blue side minions
-            minionSpawned = Instantiate(blueMinionPrefab, blueSpawnLocation, Quaternion.identity); // Quaternion.identity is the default rotation
+            minionSpawned = Instantiate(minionPrefab, blueSpawnLocation, Quaternion.identity); // Quaternion.identity is the default rotation
             minionSpawned.GetComponent<MinionAIScript>().destination = midLane;
             minionSpawned.GetComponent<MinionAIScript>().finalDestination = redSpawnLocation;
-            minionSpawned = Instantiate(blueMinionPrefab, blueSpawnLocation, Quaternion.identity);
+            minionSpawned.GetComponent<MinionAIScript>().isBlue = true;
+            minionSpawned = Instantiate(minionPrefab, blueSpawnLocation, Quaternion.identity);
             minionSpawned.GetComponent<MinionAIScript>().destination = topLane;
             minionSpawned.GetComponent<MinionAIScript>().finalDestination = redSpawnLocation;
-            minionSpawned = Instantiate(blueMinionPrefab, blueSpawnLocation, Quaternion.identity); 
+            minionSpawned.GetComponent<MinionAIScript>().isBlue = true;
+            minionSpawned = Instantiate(minionPrefab, blueSpawnLocation, Quaternion.identity); 
             minionSpawned.GetComponent<MinionAIScript>().destination = botLane;
             minionSpawned.GetComponent<MinionAIScript>().finalDestination = redSpawnLocation;
+            minionSpawned.GetComponent<MinionAIScript>().isBlue = true;
 
-            minionSpawned = Instantiate(redMinionPrefab, redSpawnLocation, Quaternion.identity); // Quaternion.identity is the default rotation
+            minionSpawned = Instantiate(minionPrefab, redSpawnLocation, Quaternion.identity); // Quaternion.identity is the default rotation
             minionSpawned.GetComponent<MinionAIScript>().destination = midLane;
             minionSpawned.GetComponent<MinionAIScript>().finalDestination = blueSpawnLocation;
-            minionSpawned = Instantiate(redMinionPrefab, redSpawnLocation, Quaternion.identity);
+            minionSpawned.GetComponent<MinionAIScript>().isBlue = false;
+            minionSpawned = Instantiate(minionPrefab, redSpawnLocation, Quaternion.identity);
             minionSpawned.GetComponent<MinionAIScript>().destination = topLane;
             minionSpawned.GetComponent<MinionAIScript>().finalDestination = blueSpawnLocation;
-            minionSpawned = Instantiate(redMinionPrefab, redSpawnLocation, Quaternion.identity); 
+            minionSpawned.GetComponent<MinionAIScript>().isBlue = false;
+            minionSpawned = Instantiate(minionPrefab, redSpawnLocation, Quaternion.identity); 
             minionSpawned.GetComponent<MinionAIScript>().destination = botLane;
             minionSpawned.GetComponent<MinionAIScript>().finalDestination = blueSpawnLocation;
+            minionSpawned.GetComponent<MinionAIScript>().isBlue = false;
 
             spawn = false;
         }
